@@ -1,12 +1,14 @@
 import * as core from '@actions/core'
 import * as io from '@actions/io'
 import nodeFs from 'fs'
-import nodeChildProcess from 'child_process'
 import { Toolchain } from './toolchain'
+import { exec, getArrayInput } from './utils'
 
-export async function installTools(toolchain: Toolchain): Promise<void> {
+export async function installTools(toolchain: Toolchain, goPackages: string[]): Promise<void> {
   await core.group('Installing Tools', async () => {
-    await installTool(toolchain, 'golang.org/x/lint/golint@latest')
+    for (const i in goPackages) {
+      await installTool(toolchain, goPackages[i])
+    }
   })
 }
 
@@ -19,5 +21,5 @@ export async function validateTools(toolchain: Toolchain): Promise<void> {
 
 async function installTool(toolchain: Toolchain, pkg: string): Promise<void> {
   core.info(pkg)
-  nodeChildProcess.execSync(`${toolchain.go} get ${pkg}`, { cwd: toolchain.tempPath })
+  exec(`${toolchain.go} get ${pkg}`, toolchain.tempPath)
 }

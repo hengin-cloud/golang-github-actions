@@ -3,8 +3,12 @@ description: 'Advanced GitHub action for Golang workflows.'
 author: 'Ivan Bertona'
 inputs:
   go-version:
-    description: 'The Go version to set up.'
+    description: 'The Go toolchain version to set up.'
     required: true
+  go-packages:
+    description: 'A list of Go packages to get and install.'
+    required: false
 runs:
   using: 'node12'
-  main: 'dist/index.js'
+  main: 'dist/main/index.js'
+  post: 'dist/post/index.js'
